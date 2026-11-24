@@ -10,5 +10,7 @@ venv/
 .env.*
 *.pt
 *.onnx
+!models/n640_best.pt
+!models/n640_last.pt
 runs/
 .huggingface/
