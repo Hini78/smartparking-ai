@@ -10,7 +10,14 @@ venv/
 .env.*
 *.pt
 *.onnx
-!models/n640_best.pt
 !models/n640_last.pt
+!weights/n640_best.pt
+!weights/crnn_best.pt
+!weights/n640_best.pt
+!weights/crnn_best.pt
 runs/
 .huggingface/
+
+# часть 4: распакованный архив части 3 (веса продублированы в weights/) и тестовые кадры
+smartparking_ocr_crnn/
+test_images/
