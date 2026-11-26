@@ -219,23 +219,24 @@ def is_video(name: str) -> bool:
     return Path(name).suffix.lower().lstrip(".") in VIDEO_EXTS
 
 
-def pretty_plate(text: str) -> str:
-    """'O777EE34' -> 'O 777 EE 34' для читаемого показа."""
+def split_plate(text: str) -> tuple[str, str | None]:
+    """'H441HX750' -> ('H 441 HX', '750'). Невалидная строка -> (строка, None)."""
     t = text.strip()
     if len(t) in (8, 9) and t[:1].isalpha() and t[1:4].isdigit() \
             and t[4:6].isalpha() and t[6:].isdigit():
-        return f"{t[0]} {t[1:4]} {t[4:6]} {t[6:]}"
-    return t or "—"
+        return f"{t[0]} {t[1:4]} {t[4:6]}", t[6:]
+    return t or "—", None
 
 
 def plate_html(text: str, small: bool = False) -> str:
-    """HTML «настоящей» таблички номера."""
+    """HTML «настоящей» таблички: слева буквы и цифры, справа под RUS — регион."""
     cls = "plate-view small" if small else "plate-view"
-    t = text.strip()
-    region = t[6:] if len(t) in (8, 9) else ""
-    region_html = (f'<span class="plate-region"><span class="flag">RUS</span>'
-                   f"{region or '—'}</span>") if region else ""
-    return (f'<span class="{cls}">{pretty_plate(t)}{region_html}</span>')
+    main, region = split_plate(text)
+    region_html = ""
+    if region is not None:
+        region_html = (f'<span class="plate-region">'
+                       f'<span class="flag">RUS</span>{region}</span>')
+    return f'<span class="{cls}">{main}{region_html}</span>'
 
 
 def gate_html(decision: str) -> str:
